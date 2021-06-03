@@ -63,17 +63,28 @@ public class UIVariation<Object: AnyObject, Value>: NSObject {
 extension UIVariation: UIVariationApplying {
     
     func applyIfMatchesTraitEnvironment() {
+        guard doesMatchTraitEnvironment() else { return }
+        object[keyPath: property] = value
+    }
+    
+    func applyIfMatchesTraitEnvironment() where Value: Equatable {
+        guard doesMatchTraitEnvironment() else { return }
+        guard object[keyPath: property] != value else { return }
+        object[keyPath: property] = value
+    }
+    
+    private func doesMatchTraitEnvironment() -> Bool {
         guard let traitCollection = traitEnvironment?.traitCollection else {
             print("Missing traitEnvironment when trying to apply \(self)")
-            return
+            return false
         }
         if let horizontalSizeClass = horizontalSizeClass {
-            if traitCollection.horizontalSizeClass != horizontalSizeClass { return }
+            if traitCollection.horizontalSizeClass != horizontalSizeClass { return false }
         }
         if let verticalSizeClass = verticalSizeClass {
-            if traitCollection.verticalSizeClass != verticalSizeClass { return }
+            if traitCollection.verticalSizeClass != verticalSizeClass { return false }
         }
-        object[keyPath: property] = value
+        return true
     }
 }
 

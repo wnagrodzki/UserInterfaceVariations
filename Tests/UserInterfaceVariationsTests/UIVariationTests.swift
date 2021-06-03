@@ -85,6 +85,20 @@ final class UIVariationTests: XCTestCase {
         XCTAssertNotEqual(label.text, sut.value)
     }
     
+    func test_When_object_value_is_already_equal_to_variation_value_Then_variation_is_NOT_applied() {
+        let object = Object()
+        let sut = UIVariation(object: object,
+                              keyPath: \.text,
+                              value: valueWhenCompact,
+                              horizontalSizeClass: .compact,
+                              verticalSizeClass: nil)
+        traitEnvironment.traitCollection = UITraitCollection(horizontalSizeClass: .compact)
+        sut.traitEnvironment = traitEnvironment
+        sut.applyIfMatchesTraitEnvironment()
+        sut.applyIfMatchesTraitEnvironment()
+        XCTAssertEqual(object.setCount, 1)
+    }
+    
     func test_factory_method_for_sizeClassDimension_horizontal() {
         let variations = UIVariation.make(for: label,
                                           property: \.text,
@@ -133,4 +147,12 @@ class TraitEnvironmentStub: NSObject, UITraitEnvironment {
     func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         
     }
+}
+
+class Object {
+    
+    var text: String? {
+        didSet { setCount += 1 }
+    }
+    var setCount = 0
 }
