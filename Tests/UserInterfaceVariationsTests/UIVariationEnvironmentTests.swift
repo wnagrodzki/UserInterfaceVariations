@@ -80,6 +80,23 @@ final class UIVariationEnvironmentTests: XCTestCase {
         variationEnvironment.traitCollection = UITraitCollection(verticalSizeClass: .compact)
         XCTAssertEqual(label.text, valueWhenCompact)
     }
+    
+    func test_adding_variations_convenience_method() {
+        let variationEnvironment = UIVariationEnvironmentFake(traitCollection: UITraitCollection(verticalSizeClass: .regular))
+        let variation0 = UIVariation(object: label,
+                                     keyPath: \.text,
+                                     value: "",
+                                     horizontalSizeClass: nil,
+                                     verticalSizeClass: nil)
+        let variation1 = UIVariation(object: label,
+                                     keyPath: \.text,
+                                     value: "",
+                                     horizontalSizeClass: nil,
+                                     verticalSizeClass: nil)
+        variationEnvironment.addVariations([variation0, variation1])
+        XCTAssert(variationEnvironment.variations[0] as AnyObject === variation0)
+        XCTAssert(variationEnvironment.variations[1] as AnyObject === variation1)
+    }
 }
 
 class UIVariationEnvironmentFake: NSObject, UITraitEnvironment {

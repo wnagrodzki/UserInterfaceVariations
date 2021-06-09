@@ -20,6 +20,12 @@ extension UIVariationEnvironment where Self: UITraitEnvironment {
         variation.applyIfMatchesTraitEnvironment()
     }
     
+    public func addVariations<Object, Value>(_ variations: [UIVariation<Object, Value>]) {
+        for variation in variations {
+            addVariation(variation)
+        }
+    }
+    
     public func removeVariation<Object, Value>(_ variation: UIVariation<Object, Value>) {
         variations.remove(variation)
         variation.traitEnvironment = nil
